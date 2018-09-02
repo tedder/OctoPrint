@@ -366,15 +366,14 @@ class FileManagerTest(unittest.TestCase):
 		            date=123456789)
 		mock_yaml_safe_load.return_value = data
 
-		with mock.patch("__builtin__.open", mock.mock_open(read_data=data), create=True) as m:
-			result = self.file_manager.get_recovery_data()
+		with mock.patch("__builtin__.open", mock.mock_open(read_data=text_data)) as m:
+			# moved safe_load to here so we could mock up the return value properly
+			with mock.patch("yaml.safe_load", return_value=data) as n:
+				result = self.file_manager.get_recovery_data()
 
-			self.assertDictEqual(data, result)
-
-			m.assert_called_with(recovery_file)
-
-			mock_handle = m()
-			mock_yaml_safe_load.assert_called_with(mock_handle)
+				self.assertDictEqual(data, result)
+				n.assert_called_with(m())
+				mock_isfile.assert_called_with(recovery_file)
 
 	@mock.patch("os.path.isfile")
 	def test_get_recovery_data_no_file(self, mock_isfile):
