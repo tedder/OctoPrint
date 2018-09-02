@@ -360,13 +360,8 @@ class FileManagerTest(unittest.TestCase):
 			# moved safe_load to here so we could mock up the return value properly
 			with mock.patch("yaml.safe_load", return_value=data) as n:
 				result = self.file_manager.get_recovery_data()
-				print("ff", result)
 
 				self.assertDictEqual(data, result)
-
-				#m.assert_called_with(recovery_file)
-
-				#mock_handle = m()
 				n.assert_called_with(m())
 				mock_isfile.assert_called_with(recovery_file)
 
