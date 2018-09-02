@@ -29,7 +29,7 @@ class TimelapseRenderJobTest(unittest.TestCase):
 	@unpack
 	def test_create_ffmpeg_command_string(self, args, kwargs, expected):
 		actual = TimelapseRenderJob._create_ffmpeg_command_string(*args, **kwargs)
-		self.assertEquals(actual, expected)
+		self.assertEqual(actual, expected)
 
 	@data(
 		(dict(),
@@ -63,4 +63,4 @@ class TimelapseRenderJobTest(unittest.TestCase):
 	@unpack
 	def test_create_filter_string(self, kwargs, expected):
 		actual = TimelapseRenderJob._create_filter_string(**kwargs)
-		self.assertEquals(actual, expected)
+		self.assertEqual(actual, expected)
