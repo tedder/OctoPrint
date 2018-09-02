@@ -12,6 +12,7 @@ __license__ = 'GNU Affero General Public License http://www.gnu.org/licenses/agp
 import os
 import traceback
 import sys
+import six
 import re
 import tempfile
 import logging
@@ -476,8 +477,8 @@ def silent_remove(file):
 
 
 def sanitize_ascii(line):
-	if not isinstance(line, basestring):
-		raise ValueError("Expected either str or unicode but got {} instead".format(line.__class__.__name__ if line is not None else None))
+	if not isinstance(line, six.string_types):
+		raise ValueError("Expected a string but got {} instead".format(line.__class__.__name__ if line is not None else None))
 	return to_unicode(line, encoding="ascii", errors="replace").rstrip()
 
 
@@ -501,7 +502,7 @@ def filter_non_ascii(line):
 
 def to_str(s_or_u, encoding="utf-8", errors="strict"):
 	"""Make sure ``s_or_u`` is a str."""
-	if isinstance(s_or_u, unicode):
+	if six.PY2 and isinstance(s_or_u, unicode):
 		return s_or_u.encode(encoding, errors=errors)
 	else:
 		return s_or_u
@@ -509,7 +510,7 @@ def to_str(s_or_u, encoding="utf-8", errors="strict"):
 
 def to_unicode(s_or_u, encoding="utf-8", errors="strict"):
 	"""Make sure ``s_or_u`` is a unicode string."""
-	if isinstance(s_or_u, str):
+	if six.PY2 and isinstance(s_or_u, str):
 		return s_or_u.decode(encoding, errors=errors)
 	else:
 		return s_or_u
@@ -1641,10 +1642,10 @@ class CaseInsensitiveSet(collections.Set):
 	"""
 
 	def __init__(self, *args):
-		self.data = set([x.lower() if isinstance(x, (str, unicode)) else x for x in args])
+		self.data = set([x.lower() if isinstance(x, six.string_types) else x for x in args])
 
 	def __contains__(self, item):
-		if isinstance(item, (str, unicode)):
+		if isinstance(item, six.string_types):
 			return item.lower() in self.data
 		else:
 			return item in self.data
