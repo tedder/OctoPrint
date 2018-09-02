@@ -22,7 +22,7 @@ INSTALL_REQUIRES = [
 	"tornado==4.5.3",
 	#"sockjs-tornado>=1.0.3,<1.1", # current version is incompatible to tornado 5, we use a
 	                               # vendored one
-	"PyYAML>=3.10,<3.11",
+	"PyYAML~=3.11", # fixes failed compilation on macos+py3
 	"Flask-Login>=0.2.11,<0.3",
 	"Flask-Principal>=0.3.5,<0.4",
 	"Flask-Babel>=0.9,<0.10",
@@ -31,8 +31,7 @@ INSTALL_REQUIRES = [
 	"pyserial>=3.4,<3.5",
 	"netaddr>=0.7.19,<0.8",
 	"watchdog>=0.8.3,<0.9",
-	"sarge==0.1.4",  # 0.1.5 introduced a breaking change with regards to the async keyword. Pinning
-	                 # to 0.1.4 for now to work around this.
+	"sarge>=0.1.5",  # 0.1.5 needed so we can install on py3.7
 	"netifaces>=0.10.6,<0.11",
 	"pylru>=1.0.9,<1.1",
 	"rsa>=3.2.3,<3.3",
