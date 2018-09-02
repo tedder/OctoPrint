@@ -25,6 +25,7 @@ __copyright__ = "Copyright (C) 2014 The OctoPrint Project - Released under terms
 
 import sys
 import os
+import six
 import yaml
 import yaml.parser
 import logging
@@ -810,7 +811,7 @@ class Settings(object):
 	def effective_hash(self):
 		import hashlib
 		hash = hashlib.md5()
-		hash.update(self.effective_yaml)
+		hash.update(self.effective_yaml.encode('utf-8'))
 		return hash.hexdigest()
 
 	@property
@@ -822,7 +823,7 @@ class Settings(object):
 	def config_hash(self):
 		import hashlib
 		hash = hashlib.md5()
-		hash.update(self.config_yaml)
+		hash.update(self.config_yaml.encode('utf-8'))
 		return hash.hexdigest()
 
 	@property
@@ -1314,7 +1315,7 @@ class Settings(object):
 		from octoprint.util import atomic_write
 		try:
 			with atomic_write(self._configfile, "wb", prefix="octoprint-config-", suffix=".yaml", permissions=0o600, max_permissions=0o666) as configFile:
-				yaml.safe_dump(self._config, configFile, default_flow_style=False, indent="    ", allow_unicode=True)
+				yaml.safe_dump(self._config, configFile, default_flow_style=False, indent=len("    "), allow_unicode=True, encoding='utf-8')
 				self._dirty = False
 		except:
 			self._logger.exception("Error while saving config.yaml!")
@@ -1496,7 +1497,7 @@ class Settings(object):
 		return value is not None
 
 	def getBaseFolder(self, type, create=True, allow_fallback=True, log_error=False, check_writable=True, deep_check_writable=False):
-		if type not in default_settings["folder"].keys() + ["base"]:
+		if type not in set(default_settings["folder"].keys()) and type not in "base":
 			return None
 
 		if type == "base":

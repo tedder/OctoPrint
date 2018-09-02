@@ -435,20 +435,20 @@ class TestSettings(unittest.TestCase):
 	def test_effective_hash(self):
 		with self.mocked_config():
 			hash = hashlib.md5()
-			hash.update(yaml.safe_dump(self.expected_effective))
+			hash.update(yaml.safe_dump(self.expected_effective, encoding='utf-8'))
 			expected_effective_hash = hash.hexdigest()
-			print(yaml.safe_dump(self.expected_effective))
+			print(yaml.safe_dump(self.expected_effective, encoding='utf-8'))
 
 			settings = octoprint.settings.Settings()
 			effective_hash = settings.effective_hash
-			print(yaml.safe_dump(settings.effective))
+			print(yaml.safe_dump(settings.effective, encoding='utf-8'))
 
 			self.assertEqual(expected_effective_hash, effective_hash)
 
 	def test_config_hash(self):
 		with self.mocked_config():
 			hash = hashlib.md5()
-			hash.update(yaml.safe_dump(self.config))
+			hash.update(yaml.safe_dump(self.config, encoding='utf-8'))
 			expected_config_hash = hash.hexdigest()
 
 			settings = octoprint.settings.Settings()
@@ -495,6 +495,7 @@ class TestSettings(unittest.TestCase):
 
 			self.assertEqual("VALUE", config["foo"]["bar"])
 
+
 	def test_set_external_modification(self):
 		with self.mocked_config() as paths:
 			basedir, configfile = paths
@@ -507,7 +508,8 @@ class TestSettings(unittest.TestCase):
 				config = yaml.safe_load(f)
 			config["server"]["host"] = "127.0.0.1"
 			with open(configfile, "w+b") as f:
-				yaml.safe_dump(config, f)
+				# specify encoding so 'dump' knows how to handle a str type in py3
+				yaml.safe_dump(config, f, encoding='utf-8')
 
 			# set some value, should also reload file before setting new api key
 			settings.set(["api", "key"], "key")
