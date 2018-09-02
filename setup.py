@@ -31,7 +31,8 @@ INSTALL_REQUIRES = [
 	"pyserial>=3.4,<3.5",
 	"netaddr>=0.7.19,<0.8",
 	"watchdog>=0.8.3,<0.9",
-	"sarge>=0.1.5",  # 0.1.5 needed so we can install on py3.7
+	"sarge>=0.1.5",  # 0.1.5 needed so we can run on py3.7, need it pre-py3.7 because
+                   # we've changed 'async' to 'async_' in our code.
 	"netifaces>=0.10.6,<0.11",
 	"pylru>=1.0.9,<1.1",
 	"rsa>=3.2.3,<3.3",
